@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:productdbb/helper/cart_manager.dart';
-import 'package:productdbb/screen/checkout_screen.dart';
-import 'package:productdbb/helper/cart_item.dart';
+import 'package:vcon_testing/helper/cart_manager.dart';
+import 'package:vcon_testing/screen/checkout_screen.dart';
+import 'package:vcon_testing/helper/cart_item.dart';
 
 class CartScreen extends StatefulWidget {
   @override

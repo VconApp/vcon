@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:productdbb/screen/product_info_screen.dart';
+import 'package:vcon_testing/helper/fetch_watch.dart';
+import 'package:vcon_testing/screen/product_info_screen.dart';
+// import 'package:productdbb/screen/product_info_screen.dart';
 
 class WatchScreen extends StatefulWidget {
   @override
@@ -13,49 +13,9 @@ class _WatchScreenState extends State<WatchScreen> {
   late Future<List<Map<String, dynamic>>> _watchesFuture;
 
   @override
-  void initState() {
+void initState() {
     super.initState();
-    _watchesFuture = _fetchWatches();
-  }
-
-  Future<List<Map<String, dynamic>>> _fetchWatches() async {
-    List<Map<String, dynamic>> watchList = [];
-
-    try {
-      QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-          .instance
-          .collection('products/watches/omniCollection')
-          .get();
-
-      print("Fetched ${snapshot.docs.length} documents");
-
-      for (var doc in snapshot.docs) {
-        Map<String, dynamic> watchData = doc.data();
-        watchData['productId'] = doc.id;
-
-        if (watchData.containsKey('imagePath') &&
-            watchData['imagePath'] != null) {
-          String gsPath = watchData['imagePath'];
-          try {
-            String imageUrl = await FirebaseStorage.instance
-                .refFromURL(gsPath)
-                .getDownloadURL();
-            watchData['imageUrl'] = imageUrl;
-          } catch (e) {
-            print('Error fetching image URL for $gsPath: $e');
-            watchData['imageUrl'] = null;
-          }
-        } else {
-          watchData['imageUrl'] = null;
-        }
-
-        watchList.add(watchData);
-      }
-    } catch (e) {
-      print('Error fetching watches: $e');
-    }
-
-    return watchList;
+    _watchesFuture = fetchWatches(); // This should now work correctly
   }
 
   @override

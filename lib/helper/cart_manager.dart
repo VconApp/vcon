@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:productdbb/helper/cart_item.dart';
+import 'package:vcon_testing/helper/cart_item.dart';
 
 class CartManager {
   final String userId;

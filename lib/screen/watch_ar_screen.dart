@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:productdbb/screen/painter.dart';
+import 'package:vcon_testing/screen/painter.dart';
 
 class WatchARScreen extends StatefulWidget {
   final String productID;

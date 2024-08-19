@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gcm_defaultSenderId" translatable="false">382422564484</string>
+    <string name="google_api_key" translatable="false">AIzaSyA3jHP367jWUkB-BL11MlHTVjKRMM19n7Q</string>
+    <string name="google_app_id" translatable="false">1:382422564484:android:a769cf0bb0bac89f350cd1</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyA3jHP367jWUkB-BL11MlHTVjKRMM19n7Q</string>
+    <string name="google_storage_bucket" translatable="false">vcon-app-2024.appspot.com</string>
+    <string name="project_id" translatable="false">vcon-app-2024</string>
+</resources>

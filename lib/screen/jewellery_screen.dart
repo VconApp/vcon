@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:productdbb/screen/product_info_screen.dart';
+import 'package:vcon_testing/helper/fetch_jewellery.dart';
+import 'package:vcon_testing/screen/product_info_screen.dart';
 
 class JewelleryScreen extends StatefulWidget {
   @override
@@ -15,41 +16,10 @@ class _JewelleryScreenState extends State<JewelleryScreen> {
   @override
   void initState() {
     super.initState();
-    _jewelleryFuture = _fetchJewellery();
+    _jewelleryFuture = fetchJewellery();
   }
 
-  Future<List<Map<String, dynamic>>> _fetchJewellery() async {
-    List<Map<String, dynamic>> jewelleryList = [];
 
-    try {
-      QuerySnapshot<Map<String, dynamic>> snapshot =
-          await FirebaseFirestore.instance.collection('Jewellery').get();
-
-      print(
-          'Jewellery collection fetched with ${snapshot.docs.length} documents.');
-
-      for (var doc in snapshot.docs) {
-        Map<String, dynamic> jewelleryData = doc.data();
-        jewelleryData['productId'] = doc.id;
-
-        if (jewelleryData['imagePath'] != null) {
-          String gsPath = jewelleryData['imagePath'];
-          String imageUrl = await FirebaseStorage.instance
-              .refFromURL(gsPath)
-              .getDownloadURL();
-          jewelleryData['imageUrl'] = imageUrl;
-        } else {
-          jewelleryData['imageUrl'] = null;
-        }
-
-        jewelleryList.add(jewelleryData);
-      }
-    } catch (e) {
-      print('Error fetching jewellery: $e');
-    }
-
-    return jewelleryList;
-  }
 
   @override
   Widget build(BuildContext context) {

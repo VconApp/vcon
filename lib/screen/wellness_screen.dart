@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:productdbb/screen/product_info_screen.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vcon_testing/screen/product_info_screen.dart';
+import 'package:vcon_testing/helper/fetch_wellness.dart';
 
 class WellnessScreen extends StatefulWidget {
   @override
@@ -15,38 +14,7 @@ class _WellnessScreenState extends State<WellnessScreen> {
   @override
   void initState() {
     super.initState();
-    _wellnessFuture = _fetchWellness();
-  }
-
-  Future<List<Map<String, dynamic>>> _fetchWellness() async {
-    List<Map<String, dynamic>> wellnessList = [];
-
-    // Fetch watches from Firestore
-    try {
-      QuerySnapshot<Map<String, dynamic>> snapshot =
-          await FirebaseFirestore.instance.collection('Wellness').get();
-
-      for (var doc in snapshot.docs) {
-        Map<String, dynamic> wellnessData = doc.data();
-        wellnessData['productId'] = doc.id;
-
-        if (wellnessData['imagePath'] != null) {
-          String gsPath = wellnessData['imagePath'];
-          String imageUrl = await FirebaseStorage.instance
-              .refFromURL(gsPath)
-              .getDownloadURL();
-          wellnessData['imageUrl'] = imageUrl;
-        } else {
-          wellnessData['imageUrl'] = null;
-        }
-
-        wellnessList.add(wellnessData);
-      }
-    } catch (e) {
-      print('Error fetching watches: $e');
-    }
-
-    return wellnessList;
+    _wellnessFuture = fetchWellness();
   }
 
   @override

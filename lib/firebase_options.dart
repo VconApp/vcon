@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyA3jHP367jWUkB-BL11MlHTVjKRMM19n7Q',
-    appId: '1:382422564484:android:19b54ca90b83bc9e350cd1',
+    appId: '1:382422564484:android:a769cf0bb0bac89f350cd1',
     messagingSenderId: '382422564484',
     projectId: 'vcon-app-2024',
     storageBucket: 'vcon-app-2024.appspot.com',
@@ -59,29 +59,28 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAjkafgBFYucgQ8brGOq7SedG-ZX0cVVDc',
-    appId: '1:382422564484:ios:b26cd44e54087cc8350cd1',
+    appId: '1:382422564484:ios:da07c32fcb401615350cd1',
     messagingSenderId: '382422564484',
     projectId: 'vcon-app-2024',
     storageBucket: 'vcon-app-2024.appspot.com',
-    iosBundleId: 'com.example.productdbb',
+    iosBundleId: 'com.example.vconTesting',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyAjkafgBFYucgQ8brGOq7SedG-ZX0cVVDc',
-    appId: '1:382422564484:ios:b26cd44e54087cc8350cd1',
+    appId: '1:382422564484:ios:da07c32fcb401615350cd1',
     messagingSenderId: '382422564484',
     projectId: 'vcon-app-2024',
     storageBucket: 'vcon-app-2024.appspot.com',
-    iosBundleId: 'com.example.productdbb',
+    iosBundleId: 'com.example.vconTesting',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyDTae0z_U6O_6YkyblADZgUMytWIIAipZA',
-    appId: '1:382422564484:web:ae69318530dd1ced350cd1',
+    appId: '1:382422564484:web:8e0e7d75f9cbf8f1350cd1',
     messagingSenderId: '382422564484',
     projectId: 'vcon-app-2024',
     authDomain: 'vcon-app-2024.firebaseapp.com',
     storageBucket: 'vcon-app-2024.appspot.com',
   );
-
 }

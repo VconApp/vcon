@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:productdbb/components/my_back_button.dart';
-import 'package:productdbb/screen/homepure_screen.dart';
-import 'package:productdbb/screen/jewellery_screen.dart';
-import 'package:productdbb/screen/product_info_screen.dart';
-import 'package:productdbb/screen/cart_screen.dart'; // Import your CartScreen here
-import 'package:productdbb/screen/watch_screen.dart';
-import 'package:productdbb/screen/wellness_screen.dart';
-import 'package:productdbb/screen/search_screen.dart';
+import 'package:vcon_testing/components/my_back_button.dart';
+import 'package:vcon_testing/screen/homepure_screen.dart';
+import 'package:vcon_testing/screen/jewellery_screen.dart';
+import 'package:vcon_testing/screen/product_info_screen.dart';
+import 'package:vcon_testing/screen/cart_screen.dart'; // Import your CartScreen here
+import 'package:vcon_testing/screen/watch_screen.dart';
+import 'package:vcon_testing/screen/wellness_screen.dart';
+import 'package:vcon_testing/screen/search_screen.dart';
 
 class ProductsCategoryPage extends StatefulWidget {
   const ProductsCategoryPage({super.key});
@@ -246,7 +246,9 @@ class _ProductsCategoryPageState extends State<ProductsCategoryPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HomePureScreen(productID: '',),
+                            builder: (context) => HomePureScreen(
+                              productID: '',
+                            ),
                           ),
                         );
                         break;
@@ -331,7 +333,7 @@ class _ProductsCategoryPageState extends State<ProductsCategoryPage> {
 
     // Fetch from Watches collection
     QuerySnapshot watchesSnapshot = await FirebaseFirestore.instance
-        .collection('Watches')
+        .collection('products/watches/omniCollection')
         .where('productID', whereIn: featuredProductIDs)
         .get();
     allWatchProducts.addAll(watchesSnapshot.docs);

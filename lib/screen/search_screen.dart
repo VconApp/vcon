@@ -38,10 +38,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
     List<String> categories = [
       'Watches',
-      'Wellness',
-      'Jewellery',
-      'HomePure',
-      'Skincare'
+      'wellness',
+      'jewellery',
+      'homeliving',
+      'personalCareBeauty'
     ];
     List<DocumentSnapshot> allResults = [];
 

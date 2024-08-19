@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:productdbb/helper/cart_item.dart';
-import 'package:productdbb/helper/cart_manager.dart';
-import 'package:productdbb/screen/3dviewer_screen.dart';
-import 'package:productdbb/screen/cart_screen.dart';
-import 'package:productdbb/screen/checkout_screen.dart';
-import 'package:productdbb/screen/earring_ar_screen.dart';
-import 'package:productdbb/screen/homepure_ar_screen.dart';
-import 'package:productdbb/screen/necklace_ar_page.dart';
-import 'package:productdbb/screen/rating_screen.dart';
-import 'package:productdbb/screen/watch_ar_screen.dart';
-import 'package:productdbb/screen/wellness_ar_screen.dart';
+import 'package:vcon_testing/helper/cart_item.dart';
+import 'package:vcon_testing/helper/cart_manager.dart';
+import 'package:vcon_testing/screen/3dviewer_screen.dart';
+import 'package:vcon_testing/screen/cart_screen.dart';
+import 'package:vcon_testing/screen/checkout_screen.dart';
+// import 'package:vcon_testing/screen/earring_ar_screen.dart';
+import 'package:vcon_testing/screen/homepure_ar_screen.dart';
+// import 'package:vcon_testing/screen/necklace_ar_page.dart';
+import 'package:vcon_testing/screen/rating_screen.dart';
+import 'package:vcon_testing/screen/watch_ar_screen.dart';
+import 'package:vcon_testing/screen/wellness_ar_screen.dart';
+import 'package:vcon_testing/helper/fetch_watch.dart';
+import 'package:vcon_testing/helper/fetch_wellness.dart';
 
 class ProductInformation extends StatelessWidget {
   final String productID;
@@ -51,40 +52,23 @@ class ProductInformation extends StatelessWidget {
 
   Future<Map<String, dynamic>?> _fetchProductData() async {
     try {
-      final watchDoc = await FirebaseFirestore.instance
-          .collection('Watches')
-          .doc(productID)
-          .get();
+      // Fetch watches and wellness data
+      final watchList = await fetchWatches();
+      final wellnessList = await fetchWellness();
+      final jewelleryList = await fetchWellness();
 
-      if (watchDoc.exists) {
-        return await _processProductData(watchDoc);
-      }
+      // Combine both lists
+      final combinedList = [...watchList, ...wellnessList, ...jewelleryList];
 
-      final wellnessDoc = await FirebaseFirestore.instance
-          .collection('Wellness')
-          .doc(productID)
-          .get();
+      // Find the product by productID
+      final product = combinedList.firstWhere(
+        (item) => item['productId'] == productID,
+        orElse: () => {}, // Return empty map if product not found
+      );
 
-      if (wellnessDoc.exists) {
-        return await _processProductData(wellnessDoc);
-      }
-
-      final jewelleryDoc = await FirebaseFirestore.instance
-          .collection('Jewellery')
-          .doc(productID)
-          .get();
-
-      if (jewelleryDoc.exists) {
-        return await _processProductData(jewelleryDoc);
-      }
-
-      final HomePureDoc = await FirebaseFirestore.instance
-          .collection('HomePure')
-          .doc(productID)
-          .get();
-
-      if (HomePureDoc.exists) {
-        return await _processProductData(HomePureDoc);
+      // If product is found, fetch its image URL
+      if (product.isNotEmpty) {
+        return await fetchImageUrl(product);
       }
 
       return null;
@@ -94,31 +78,23 @@ class ProductInformation extends StatelessWidget {
     }
   }
 
-  Future<Map<String, dynamic>?> _processProductData(
-      DocumentSnapshot doc) async {
-    final data = doc.data() as Map<String, dynamic>?;
-    if (data == null) {
-      return null;
+  Future<Map<String, dynamic>> fetchImageUrl(
+      Map<String, dynamic> productData) async {
+    if (productData.containsKey('imagePath') &&
+        productData['imagePath'] != null) {
+      String gsPath = productData['imagePath'];
+      try {
+        String imageUrl =
+            await FirebaseStorage.instance.refFromURL(gsPath).getDownloadURL();
+        productData['imageUrl'] = imageUrl;
+      } catch (e) {
+        print('Error fetching image URL for $gsPath: $e');
+        productData['imageUrl'] = null;
+      }
+    } else {
+      productData['imageUrl'] = null;
     }
-
-    if (data.containsKey('imagePath') &&
-        data['imagePath'].startsWith('gs://')) {
-      String imagePath = data['imagePath'];
-      data['imagePath'] = await _getDownloadUrl(imagePath);
-    }
-
-    return data;
-  }
-
-  Future<String> _getDownloadUrl(String gsUrl) async {
-    try {
-      final ref = FirebaseStorage.instance.refFromURL(gsUrl);
-      final downloadUrl = await ref.getDownloadURL();
-      return downloadUrl;
-    } catch (e) {
-      print('Error fetching download URL: $e');
-      return '';
-    }
+    return productData;
   }
 
   Widget _buildProductDetails(
@@ -134,7 +110,7 @@ class ProductInformation extends StatelessWidget {
           ? (product['irPrice'] as int).toDouble()
           : product['irPrice'] ?? 0.0;
     }
-    String imageUrl = product['imagePath'] ?? '';
+    String imageUrl = product['imageUrl'] ?? '';
     String tagline = product['tagline'] ?? 'N/A';
     String description = product['description'] ?? 'No description available';
 
@@ -424,7 +400,7 @@ class ProductInformation extends StatelessWidget {
           ? (product['irPrice'] as int).toDouble()
           : product['irPrice'] ?? 0.0;
     }
-    String imageUrl = product['imagePath'] ?? '';
+    String imageUrl = product['imageUrl'] ?? product['imagePath'] ?? '';
 
     Map<String, dynamic> productData = {
       'productName': name,
@@ -589,11 +565,11 @@ class ProductInformation extends StatelessWidget {
                   )),
         );
       } else if (category == 'Wellness') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => WellnessARScreen(productID: productID)),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //       builder: (context) => WellnessARScreen(productID: productID)),
+        // );
       } else if (category == 'Jewellery') {
         // Debug print statement to check category and productID
         print('Navigating in Jewellery category with productID: $productID');
@@ -610,20 +586,20 @@ class ProductInformation extends StatelessWidget {
           if (productNumber != -1) {
             if (productNumber % 3 == 1) {
               print('Navigating to NecklaceARPage');
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NecklaceARPage(productID: productID),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => NecklaceARPage(productID: productID),
+              //   ),
+              // );
             } else if (productNumber % 3 == 2) {
               print('Navigating to EarARPage');
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EarringARScreen(productID: productID),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => EarringARScreen(productID: productID),
+              //   ),
+              // );
             } else if (productNumber % 3 == 0) {
               print('Navigating to WristARPage');
               // Navigator.push(
